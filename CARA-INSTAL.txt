@@ -1,0 +1,16 @@
+PANDUAN PWA ABSENSI KELAS 2
+
+Paket ini berisi aplikasi absensi, manifest PWA, service worker, dan dua ikon.
+
+PENTING: PWA tidak dapat dipasang dari file HTML yang dibuka langsung sebagai
+file://. Agar menu Instal Aplikasi / Tambahkan ke layar utama muncul, aplikasi
+harus ditempatkan pada alamat HTTPS.
+
+Setelah dibuka melalui HTTPS di Chrome HP:
+1. Buka alamat aplikasi.
+2. Buka menu Chrome.
+3. Pilih Instal aplikasi atau Tambahkan ke layar utama.
+4. Ikon Absensi 2B akan muncul di layar utama.
+
+Data absensi tetap menggunakan penyimpanan browser HP. Gunakan menu Backup
+secara berkala agar data aman.
