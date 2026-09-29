@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#236b3b">
+<title>Absensi Kelas 2 MI Annajiyah - V3</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f3f7f3;color:#243024}
+header{background:#236b3b;color:#fff;padding:17px 15px 13px;position:sticky;top:0;z-index:10}
+h1{font-size:19px;margin:0 0 4px}.sub{font-size:12px;opacity:.9}
+main{max-width:760px;margin:auto;padding:12px 11px 88px}.card{background:#fff;border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 2px 10px #0000000c}
+.title{font-size:16px;font-weight:700;margin-bottom:10px}.small{font-size:12px;color:#657065}
+input,select,textarea,button{font:inherit;border-radius:10px;border:1px solid #ccd8cc;padding:10px}input,select,textarea{width:100%}
+button{cursor:pointer;font-weight:600;border:0}.primary{background:#236b3b;color:white}.secondary{background:#e7f2e9;color:#1e5a32}.danger{background:#ffebee;color:#b71c1c}.orange{background:#fff2d8;color:#7a5200}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.stat{padding:8px 3px;border-radius:12px;text-align:center;font-size:11px}.stat b{display:block;font-size:19px;margin-top:2px}
+.h{background:#e7f5e9;color:#1b5e20}.s{background:#fff4cc;color:#765b00}.i{background:#e3f2fd;color:#075985}.a{background:#ffebee;color:#b71c1c}
+.student{border:1px solid #e0e7e0;border-radius:14px;padding:11px;margin:8px 0}.name{font-weight:bold;margin-bottom:8px}.choices{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.choice{padding:9px 2px;font-size:11px;background:#f2f4f2}.choice.active.h{background:#43a047;color:white}.choice.active.s{background:#f2c94c;color:#3e3200}.choice.active.i{background:#42a5f5;color:white}.choice.active.a{background:#e53935;color:white}
+.actionrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actionrow3{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.tabs{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ddd;display:flex;z-index:20}.tabs button{flex:1;border-radius:0;background:#fff;padding:10px 2px;font-size:11px}.tabs button.active{color:#236b3b;background:#edf7ed}
+.hidden{display:none}.tablewrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:11px}th,td{border:1px solid #ddd;padding:6px;text-align:center}th{background:#edf5ed}.left{text-align:left!important}
+.badge{display:inline-block;border-radius:999px;padding:5px 8px;font-size:11px;font-weight:bold}.green{background:#e5f4e8;color:#1b5e20}.red{background:#ffebee;color:#b71c1c}
+.note{padding:9px;border-radius:10px;background:#f5f8f5;font-size:12px;margin-top:8px}
+@media(max-width:430px){.grid2{grid-template-columns:1fr}.actionrow3{grid-template-columns:1fr 1fr 1fr}.choice{font-size:10px}}
+@media print{header,.tabs,.noPrint,button,input,select,textarea{display:none!important}body{background:#fff}main{padding:0}.card{box-shadow:none}}
+</style>
+
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Absensi 2B">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+</head>
+<body>
+<header><h1 id="judul">📚 Absensi Kelas 2 MI Annajiyah</h1><div class="sub" id="subjudul">Administrasi kehadiran murid</div></header>
+
+<main>
+<section id="home">
+<div class="card">
+ <div class="title">📅 Absensi Hari Ini</div>
+ <div class="grid2"><div><div class="small">Tanggal</div><input type="date" id="tanggal"></div><div><div class="small">Status</div><div id="ringkas" class="note">Belum ada data</div></div></div>
+ <div style="height:10px"></div><div class="stats">
+ <div class="stat h">Hadir<b id="cntH">0</b></div><div class="stat s">Sakit<b id="cntS">0</b></div><div class="stat i">Izin<b id="cntI">0</b></div><div class="stat a">Alpa<b id="cntA">0</b></div>
+ </div>
+</div>
+<div class="card noPrint"><input id="cari" placeholder="🔎 Cari nama murid..."></div>
+<div class="note noPrint">💡 Ketuk salah satu tombol <b>Hadir, Sakit, Izin, atau Alpa</b>. Status yang dipilih akan langsung berubah dan tersimpan di HP.</div><div id="daftar"></div>
+<div class="card noPrint actionrow">
+ <button class="primary" onclick="simpan()">💾 Simpan</button><button class="secondary" onclick="hadirSemua()">🟢 Hadir Semua</button>
+</div>
+</section>
+
+<section id="rekapPage" class="hidden">
+<div class="card">
+ <div class="title">📊 Rekap Bulanan</div>
+ <div class="grid2"><input type="month" id="bulan"><select id="pilihMurid"><option value="">Semua murid</option></select></div>
+ <div class="note">H = Hadir • S = Sakit • I = Izin • A = Alpa</div>
+</div>
+<div class="card"><div id="rekap"></div></div>
+<div class="card noPrint actionrow3"><button class="secondary" onclick="cetak()">🖨️ Cetak</button><button class="secondary" onclick="backup()">⬇️ Backup</button><button class="secondary" onclick="$('file').click()">⬆️ Pulihkan</button><input id="file" type="file" accept=".json" style="display:none" onchange="restore(event)"></div>
+</section>
+
+<section id="riwayatPage" class="hidden">
+<div class="card">
+ <div class="title">📆 Riwayat Kehadiran</div>
+ <input type="date" id="riwayatTanggal">
+ <div style="height:8px"></div><div id="riwayat"></div>
+</div>
+</section>
+
+<section id="muridPage" class="hidden">
+<div class="card">
+ <div class="title">👥 Data Murid</div>
+ <div class="small">Satu nama setiap baris. Nomor urut dibuat otomatis.</div>
+ <div style="height:8px"></div><textarea id="namaMurid" style="min-height:250px"></textarea>
+ <div style="height:8px"></div><button class="primary" onclick="simpanMurid()">💾 Simpan Daftar Murid</button>
+</div>
+</section>
+
+<section id="pengaturanPage" class="hidden">
+<div class="card">
+ <div class="title">⚙️ Identitas Kelas</div>
+ <div class="small">Data ini muncul pada judul aplikasi dan rekap cetak.</div>
+ <div style="height:8px"></div>
+ <label class="small">Nama sekolah</label><input id="sekolah">
+ <label class="small">Kelas</label><input id="kelas">
+ <label class="small">Nama wali kelas</label><input id="wali">
+ <label class="small">Tahun ajaran</label><input id="tahun">
+ <div style="height:8px"></div><button class="primary" onclick="simpanPengaturan()">💾 Simpan Identitas</button>
+</div>
+<div class="card">
+ <div class="title">🗃️ Pengelolaan Data</div>
+ <div class="small">Backup disarankan dilakukan secara berkala agar data aman saat HP berganti atau aplikasi terhapus.</div>
+ <div style="height:9px"></div><div class="actionrow"><button class="secondary" onclick="backup()">⬇️ Backup Semua Data</button><button class="danger" onclick="hapusSemua()">🗑️ Hapus Semua Data</button></div>
+</div>
+</section>
+</main>
+
+<nav class="tabs">
+<button id="tHome" class="active" onclick="tab('home')">📝<br>Absensi</button>
+<button id="tRekap" onclick="tab('rekapPage')">📊<br>Rekap</button>
+<button id="tRiwayat" onclick="tab('riwayatPage')">📆<br>Riwayat</button>
+<button id="tMurid" onclick="tab('muridPage')">👥<br>Murid</button>
+<button id="tPengaturan" onclick="tab('pengaturanPage')">⚙️<br>Pengaturan</button>
+</nav>
+
+<script>
+const KEY='absensi_mi_annajiyah_v2';
+const $=id=>document.getElementById(id);
+function pad(n){return String(n).padStart(2,'0')}
+function today(){let d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function monthNow(){let d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)}
+let data=JSON.parse(localStorage.getItem(KEY)||'null')||{
+ sekolah:'MI Annajiyah',kelas:'Kelas 2',wali:'',tahun:'2026/2027',
+ murid:[],absensi:{}
+};
+if(!data.murid.length)data.murid=["Murid 1","Murid 2","Murid 3","Murid 4","Murid 5"];
+function persist(){localStorage.setItem(KEY,JSON.stringify(data))}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function current(){return data.absensi[$('tanggal').value]||{}}
+function setStatus(n,s){let d=$('tanggal').value;if(!data.absensi[d])data.absensi[d]={};data.absensi[d][n]=s;persist();render()}
+function render(){
+ let q=$('cari').value.toLowerCase(),cur=current(),list=data.murid.filter(n=>n.toLowerCase().includes(q));
+ $('daftar').innerHTML=list.map(n=>{let st=cur[n]||'';return `<div class="student"><div class="name">${data.murid.indexOf(n)+1}. ${escapeHtml(n)}</div><div class="choices">
+ ${[['H','🟢 Hadir','h'],['S','🟡 Sakit','s'],['I','🔵 Izin','i'],['A','🔴 Alpa','a']].map(x=>`<button type="button" class="choice ${x[2]} ${st===x[0]?'active':''}" data-name="${escapeHtml(n)}" data-status="${x[0]}">${x[1]}</button>`).join('')}
+ </div></div>`}).join('')||'<div class="card">Belum ada murid.</div>';
+ let vals=Object.values(cur);['H','S','I','A'].forEach(x=>$('cnt'+x).textContent=vals.filter(v=>v===x).length);
+ $('ringkas').innerHTML=Object.keys(cur).length
+      ? `<b>${Object.keys(cur).length}</b> dari ${data.murid.length} murid sudah tercatat.`
+      : 'Belum ada absensi untuk tanggal ini.';
+}
+// Handler status dibuat dengan event delegation agar tombol Hadir/Sakit/Izin/Alpa
+// tetap berfungsi meskipun daftar murid dirender ulang atau dicari.
+$('daftar').addEventListener('click',function(e){
+  const btn=e.target.closest('.choice');
+  if(!btn) return;
+  const name=btn.dataset.name;
+  const status=btn.dataset.status;
+  if(name && status) setStatus(name,status);
+});
+
+function simpan(){persist();alert('Absensi tersimpan di HP.')}
+function hadirSemua(){let d=$('tanggal').value;if(!data.absensi[d])data.absensi[d]={};data.murid.forEach(n=>data.absensi[d][n]='H');persist();render()}
+function simpanMurid(){let arr=$('namaMurid').value.split(/\n/).map(x=>x.trim()).filter(Boolean);data.murid=[...new Set(arr)];persist();render();isiPilihMurid();alert('Daftar murid tersimpan.')}
+function isiPilihMurid(){ $('pilihMurid').innerHTML='<option value="">Semua murid</option>'+data.murid.map(n=>`<option>${escapeHtml(n)}</option>`).join('') }
+function renderRekap(){
+ let b=$('bulan').value, target=$('pilihMurid').value, people=target?[target]:data.murid;
+ let rows=people.map(n=>{let c={H:0,S:0,I:0,A:0};Object.keys(data.absensi).filter(d=>d.startsWith(b)).forEach(d=>{let s=data.absensi[d][n];if(s)c[s]++});let total=c.H+c.S+c.I+c.A,pct=total?Math.round(c.H/total*100):0;
+ return `<tr><td>${data.murid.indexOf(n)+1}</td><td class="left">${escapeHtml(n)}</td><td>${c.H}</td><td>${c.S}</td><td>${c.I}</td><td>${c.A}</td><td>${pct}%</td></tr>`}).join('');
+ $('rekap').innerHTML=`<div class="tablewrap"><table><tr><th>No</th><th>Nama</th><th>H</th><th>S</th><th>I</th><th>A</th><th>%</th></tr>${rows}</table></div>`;
+}
+function renderRiwayat(){let d=$('riwayatTanggal').value,cur=data.absensi[d]||{};$('riwayat').innerHTML=Object.keys(cur).length?`<div class="tablewrap"><table><tr><th>No</th><th>Nama</th><th>Status</th></tr>${data.murid.map((n,i)=>{let s=cur[n]||'-';return `<tr><td>${i+1}</td><td class="left">${escapeHtml(n)}</td><td>${s}</td></tr>`}).join('')}</table></div>`:'<div class="note">Belum ada data pada tanggal ini.</div>'}
+function tab(x){
+ ['home','rekapPage','riwayatPage','muridPage','pengaturanPage'].forEach(y=>$(y).classList.toggle('hidden',y!==x));
+ ['Home','Rekap','Riwayat','Murid','Pengaturan'].forEach(y=>$('t'+y).classList.toggle('active',x===({Home:'home',Rekap:'rekapPage',Riwayat:'riwayatPage',Murid:'muridPage',Pengaturan:'pengaturanPage'}[y])));
+ if(x==='rekapPage')renderRekap();if(x==='riwayatPage')renderRiwayat();
+}
+function isiPengaturan(){$('sekolah').value=data.sekolah;$('kelas').value=data.kelas;$('wali').value=data.wali;$('tahun').value=data.tahun}
+function simpanPengaturan(){data.sekolah=$('sekolah').value.trim()||'MI Annajiyah';data.kelas=$('kelas').value.trim()||'Kelas 2';data.wali=$('wali').value.trim();data.tahun=$('tahun').value.trim();persist();judul();alert('Identitas kelas tersimpan.')}
+function judul(){$('judul').textContent='📚 Absensi '+data.kelas+' '+data.sekolah;$('subjudul').textContent='Wali Kelas: '+(data.wali||'-')+' • Tahun Ajaran '+data.tahun}
+function cetak(){window.print()}
+function backup(){let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='backup_absensi_'+data.kelas.replace(/\s+/g,'_')+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function restore(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!x.murid||!x.absensi)throw 0;data=x;persist();init();alert('Backup berhasil dipulihkan.')}catch{alert('File backup tidak valid.')}};r.readAsText(f)}
+function hapusSemua(){if(confirm('Semua data absensi dan daftar murid akan dihapus dari HP. Lanjutkan?')){localStorage.removeItem(KEY);location.reload()}}
+$('tanggal').value=today();$('bulan').value=monthNow();$('riwayatTanggal').value=today();$('namaMurid').value=data.murid.join('\n');
+$('tanggal').onchange=render;$('cari').oninput=render;$('bulan').onchange=renderRekap;$('pilihMurid').onchange=renderRekap;$('riwayatTanggal').onchange=renderRiwayat;
+function init(){$('namaMurid').value=data.murid.join('\n');isiPilihMurid();isiPengaturan();judul();render()}
+init();
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./sw.js").catch(function(err) {
+      console.log("Service worker belum aktif:", err);
+    });
+  });
+}
+</script>
+</body>
+</html>
